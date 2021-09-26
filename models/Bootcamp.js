@@ -26,7 +26,7 @@ const BootcampSchema = new mongoose.Schema({
     maxlength: [20, 'Phone number can not be longer than 20 characters'],
   },
   email: {
-    type: string,
+    type: String,
     match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       'Please add a valid email',
@@ -36,4 +36,48 @@ const BootcampSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add an address'],
   },
+  location: {
+    // GeoJSON Point
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: false,
+    },
+    coordinates: {
+      type: [Number],
+      required: false,
+      index: '2dsphere',
+    },
+    formattedAddress: String,
+    street: String,
+    city: String,
+    state: String,
+    zipcode: String,
+    country: String,
+  },
+  careers: {
+    // Array of string
+    type: [String],
+    required: true,
+    enum: [
+      'Web Development',
+      'Mobile Development',
+      'UI/UX',
+      'Data Science',
+      'Business',
+      'Other',
+    ],
+  },
+  averageRating: {
+    type: Number,
+    min: [1, 'Rating must be at least 1'],
+    max: [10, 'Rating must can not be more than 10'],
+  },
+  averageCost: Number,
+  photo: {
+    type: String,
+    default: Date.now,
+  },
 });
+
+module.exports = mongoose.model('Bootcamp', BootcampSchema);
